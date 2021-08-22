@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+}
+
+@model List<UserDataBaseUI.Models.UserViewModel>; 
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Users</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<style>
+    div {
+        width: 30%;
+        background: gray;
+        padding: 20px;
+        -webkit-box-sizing: border-box;
+        border-width: 2px;
+        border-color: palevioletred;
+    }
+
+    tr:hover {
+        background: #d5e6a2;
+    }
+</style>
+
+<body>
+    <form method="get">
+        <button asp-controller="Home" asp-action="Create">Добавить нового пользователя</button>
+    </form>
+    <h3><b>Пользователи</b></h3>
+    <table border="1">
+        <tr>
+            <td width="100" style="font-weight: bold">Имя</td>
+            <td width="100" style="font-weight: bold">Фамилия</td>
+            <td width="100" style="font-weight: bold">Детали</td>
+            <td width="100" style="font-weight: bold">Удалить</td>
+        </tr>
+    </table>
+
+    @{
+        var item = 0;
+    }
+
+    @for (int i = 0; i <= @Model.Count - 1; i++)
+    {
+        item = i;
+
+        <table border="1">
+            <tr>
+                <td width="100">@Model[i].Name</td>
+                <td width="100">@Model[i].Surname</td>
+                <td width="100" style="color: blue; text-decoration: underline" ; class="@Model[i].Id">Details</td>
+                <td width="100" style="color: blue; text-decoration: underline" ; id="@Model[i].Id">Delete</td>
+            </tr>
+        </table>
+    }
+    <h2>Информация о пользователе</h2>
+
+    <p id='mydiv1'></p>
+
+    <script>
+        for (let i = 0; i <= @Model.Count; i++) { $(document).ready(function () {
+            $('.' + i).click(function () {
+                $.get("/Home/ShowDetails?positionUserOfTableInView=" + i, function(data) {
+                    $("#mydiv1").html(data);
+                });
+            });
+        });
+    }
+    </script>
+
+    <script>
+        for (let i = 0; i <= @Model.Count; i++) {
+            $(document).ready(function () {
+                $(document).on("click", '#' + i, function () {
+                    var result = confirm("Are you sure?");
+                    if (result) {
+                        var id = $(this).attr('id').valueOf();
+                        var $this = $(this)
+                        //Ajax
+                        $.ajax({
+                            url: '/Home/Delete?id=' + i,
+                            type: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                $this.closest("tr").remove()
+                            },
+                            error: function (data) {
+                                alert(data);
+                            }
+                        })
+                    } else {
+                        alert("Record Not Deleted")
+                    }
+
+                });
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+
+@model UserDataBaseUI.Models.UserViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Show</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div>
+        Возраст - @ViewBag.User.Age;
+        Адрес - @ViewBag.User.Adress;
+    </div>
+</body>
+</html>
